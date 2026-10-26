@@ -1,0 +1,332 @@
+/* Global theme tokens; TopBar's theme editor overrides them on :root, and each
+   panel can override --surface/--text/--accent on its own container. */
+:root {
+  --bg: #000000;
+  --surface: #121212;
+  --text: #ffffff;
+  --accent: #1ed760;
+  --muted: color-mix(in srgb, var(--text) 62%, transparent);
+  --hover: color-mix(in srgb, var(--text) 8%, transparent);
+  --radius: 8px;
+  color-scheme: dark;
+  font-family: "SF Pro Display", "SF Pro Text", -apple-system, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); overflow: hidden; }
+button, input, select { font: inherit; color: inherit; }
+h1, h2, h3, p { margin: 0; }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-thumb { background: transparent; border: 3px solid transparent; background-clip: padding-box; border-radius: 999px; }
+:hover::-webkit-scrollbar-thumb { background-color: color-mix(in srgb, var(--text) 25%, transparent); }
+::-webkit-scrollbar-track { background: transparent; }
+
+.app { display: grid; grid-template-rows: auto 1fr auto; height: 100%; background: var(--bg); }
+.workspace-host { min-height: 0; padding: 0 8px; }
+.workspace { height: 100%; }
+
+/* dockview, mapped onto our tokens */
+.spotify {
+  --dv-background-color: var(--bg);
+  --dv-group-view-background-color: var(--surface);
+  --dv-tabs-and-actions-container-background-color: var(--surface);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--surface);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--surface);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--surface);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--surface);
+  --dv-activegroup-visiblepanel-tab-color: var(--text);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--text);
+  --dv-activegroup-hiddenpanel-tab-color: var(--muted);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--muted);
+  --dv-separator-border: transparent;
+  --dv-paneview-header-border-color: transparent;
+  --dv-tab-divider-color: transparent;
+  --dv-active-sash-color: var(--accent);
+  --dv-border-radius: var(--radius);
+  --dv-drag-over-background-color: color-mix(in srgb, var(--accent) 25%, transparent);
+  background: var(--bg);
+}
+/* The themeDark grid paints --surface behind the panels, which hides the gaps;
+   the window colour has to show through so each panel reads as its own container */
+.spotify .dv-grid-view { background: var(--bg); }
+.spotify .dv-groupview { border-radius: var(--radius); overflow: hidden; }
+.spotify .dv-tab { font-weight: 700; font-size: 13px; }
+
+/* Module container */
+.module {
+  display: flex; flex-direction: column; height: 100%; background: var(--surface); color: var(--text);
+  /* Re-derived here so a panel's own --surface/--text override reaches them */
+  --muted: color-mix(in srgb, var(--text) 62%, transparent);
+  --hover: color-mix(in srgb, var(--text) 8%, transparent);
+  --raised: color-mix(in srgb, var(--text) 7%, var(--surface));
+  --raised-hover: color-mix(in srgb, var(--text) 12%, var(--surface));
+}
+.module-body { flex: 1; min-height: 0; overflow: auto; padding: 16px; }
+.module-toolbar {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 12px;
+  background: var(--raised);
+}
+.color-field { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.color-field input { width: 20px; height: 20px; padding: 0; border: none; border-radius: 50%; background: none; cursor: pointer; overflow: hidden; }
+.color-field input::-webkit-color-swatch-wrapper { padding: 0; }
+.color-field input::-webkit-color-swatch { border: 1px solid var(--hover); border-radius: 50%; }
+
+/* Module headings: the bold title at the top of each container */
+.module-head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.module-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px; }
+.module-head .module-title { margin: 0; }
+.section-title { font-size: 14px; font-weight: 700; margin: 20px 0 6px; padding: 0 8px; }
+.module-title + .section-title { margin-top: 0; }
+
+/* Shared bits */
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.empty { color: var(--muted); text-align: center; margin: 48px auto 0; max-width: 32ch; }
+.spacer { flex: 1; }
+.icon { display: block; flex: none; }
+.text-button, .icon-button, .link, .round-button {
+  background: none; border: none; cursor: pointer; border-radius: 999px; color: var(--muted);
+}
+.text-button { padding: 6px 14px; font-weight: 700; font-size: 13px; border: 1px solid color-mix(in srgb, var(--text) 30%, transparent); }
+.text-button:hover { color: var(--text); border-color: var(--text); transform: scale(1.03); }
+.icon-button:hover, .link:hover { color: var(--text); }
+.text-button.on { color: var(--bg); background: var(--text); border-color: var(--text); }
+.text-button.danger:hover { color: #ff6b6b; border-color: #ff6b6b; }
+.icon-button { display: inline-grid; place-items: center; padding: 6px; position: relative; }
+.icon-button.on { color: var(--accent); }
+/* Spotify's active toggle: green glyph plus a dot beneath it */
+.icon-button.on::after {
+  content: ""; position: absolute; bottom: -2px; left: 50%; width: 4px; height: 4px; margin-left: -2px;
+  border-radius: 50%; background: var(--accent);
+}
+.link { padding: 0; color: var(--text); font-weight: 700; }
+.link:hover { text-decoration: underline; }
+select {
+  background: var(--raised, color-mix(in srgb, var(--text) 7%, var(--surface))); border: none;
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+}
+
+.chips { display: flex; gap: 8px; }
+.chip {
+  padding: 5px 12px; border: none; border-radius: 999px; cursor: pointer; font-size: 13px;
+  background: var(--raised); color: var(--text);
+}
+.chip:hover { background: var(--raised-hover); }
+.chip.on { background: var(--text); color: var(--surface); }
+
+/* Artwork tile: a per-name hue stands in for real cover art */
+.art {
+  display: grid; place-items: center; flex: none; aspect-ratio: 1; border-radius: 4px; overflow: hidden;
+  background: linear-gradient(145deg, hsl(var(--hue) 55% 46%), hsl(calc(var(--hue) + 35) 45% 22%));
+  color: color-mix(in srgb, #fff 55%, transparent); font-weight: 800; letter-spacing: -0.03em;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 0.35);
+}
+.art.round { border-radius: 50%; }
+.thumb { width: 44px; font-size: 18px; box-shadow: none; }
+
+.list { list-style: none; margin: 0; padding: 0; }
+.row {
+  display: flex; align-items: center; gap: 12px; padding: 6px 8px; border-radius: 6px;
+  cursor: default; user-select: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.row:hover { background: var(--hover); }
+.row.active .row-title { color: var(--accent); }
+.row-main { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.row-main > * { overflow: hidden; text-overflow: ellipsis; }
+.row-title { font-size: 15px; }
+.row .icon-button { visibility: hidden; }
+.row:hover .icon-button { visibility: visible; }
+
+/* Top bar */
+.top-bar { display: flex; align-items: center; gap: 10px; padding: 8px 16px; min-height: 56px; }
+.edit-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff6b6b; }
+.status-dot.connected { background: var(--accent); }
+.status-dot.connecting { background: #f5c518; }
+
+/* Player bar */
+.player-bar {
+  display: grid; grid-template-columns: 1fr minmax(300px, 2fr) 1fr; align-items: center;
+  gap: 16px; padding: 8px 16px; height: 80px;
+}
+.pb-track { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.pb-cover { width: 56px; height: 56px; border-radius: 4px; object-fit: cover; background: var(--surface); flex: none; }
+.pb-text { display: flex; flex-direction: column; min-width: 0; }
+.pb-text > * { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pb-text .row-title { font-size: 14px; }
+/* Muted like Spotify's; the underline on hover shows it's a link */
+.pb-artist { display: block; max-width: 100%; text-align: left; font-weight: 400; color: var(--muted); }
+.pb-artist:hover { color: var(--text); }
+.pb-center { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pb-controls { display: flex; align-items: center; gap: 16px; }
+.repeat-one { position: absolute; top: 1px; right: 0; font-size: 9px; font-weight: 800; }
+.play-pause {
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--text); color: var(--bg);
+}
+.play-pause:hover { transform: scale(1.06); }
+.pb-seek { display: flex; align-items: center; gap: 8px; width: 100%; }
+.pb-seek > span { min-width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
+.pb-seek input { flex: 1; }
+.pb-volume { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.pb-volume input { width: 96px; }
+
+/* Slim Spotify-style bars: white fill that turns accent on hover, thumb only on hover */
+input[type="range"] {
+  --fill: 0%;
+  -webkit-appearance: none; appearance: none; height: 12px; margin: 0; background: transparent; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 999px;
+  background: linear-gradient(to right, var(--text) var(--fill), color-mix(in srgb, var(--text) 30%, transparent) var(--fill));
+}
+input[type="range"]:hover::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--accent) var(--fill), color-mix(in srgb, var(--text) 30%, transparent) var(--fill));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4px; border-radius: 50%;
+  background: var(--text); opacity: 0;
+}
+input[type="range"]:hover::-webkit-slider-thumb, input[type="range"]:focus-visible::-webkit-slider-thumb { opacity: 1; }
+input[type="range"]:disabled { cursor: default; opacity: 0.5; }
+
+/* Library */
+.library .row-title { font-size: 15px; }
+.library-loading { padding: 8px; }
+
+/* Now playing */
+/* The cover shrinks so the title still fits when the panel is short; the lyrics card sits below and the panel scrolls to it */
+.now-playing { display: flex; flex-direction: column; gap: 14px; height: 100%; container-type: size; }
+.now-playing > * { flex: none; }
+.np-context { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cover {
+  /* ~150px is the heading, title, artist and rating */
+  width: min(100%, max(80px, 100cqh - 150px)); aspect-ratio: 1; align-self: center;
+  object-fit: cover; border-radius: var(--radius); box-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
+}
+.placeholder { display: grid; place-items: center; background: var(--hover); color: var(--muted); font-size: 48px; }
+.np-text { display: flex; flex-direction: column; gap: 2px; }
+.np-title { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+.card { display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: var(--radius); background: var(--raised); }
+.card-title { font-size: 16px; font-weight: 700; }
+.stars { display: flex; gap: 2px; margin-top: 4px; }
+.star { background: none; border: none; cursor: pointer; font-size: 18px; color: color-mix(in srgb, var(--text) 25%, transparent); padding: 0; }
+.star:hover { color: var(--text); }
+.star.on { color: var(--accent); }
+
+/* Lyrics: Spotify sets lyrics on a full-bleed colour, here the accent.
+   60% keeps the dark upcoming lines above 3:1 against the default green. */
+.module:has(.lyrics-panel), .lyrics-card, .lyrics-page { background: color-mix(in srgb, var(--accent) 60%, var(--surface)); }
+.lyrics-panel { height: 100%; }
+/* Each view scrolls its own lyrics, so position: relative makes the lines' offsetTop relative to it */
+.lyrics { position: relative; height: 100%; overflow-y: auto; padding: 8px 8px 40vh; }
+.lyrics .line {
+  max-width: 40ch; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 14px;
+  color: color-mix(in srgb, var(--surface) 88%, transparent); cursor: pointer; transition: color 0.2s;
+}
+.lyrics .line:hover { text-decoration: underline; }
+.lyrics .line.past { color: color-mix(in srgb, var(--text) 75%, transparent); }
+.lyrics .line.active { color: var(--text); }
+.lyrics-plain { font: inherit; font-size: 16px; white-space: pre-wrap; margin: 0; }
+
+.lyrics-card { height: 340px; padding-bottom: 0; overflow: hidden; }
+.lyrics-card .lyrics { flex: 1; min-height: 0; padding: 4px 0 120px; }
+.lyrics-card .line { font-size: 20px; margin-bottom: 10px; }
+.lyrics-card .empty { margin-top: 24px; color: var(--text); }
+
+/* Full page: covers the workspace (inset by its 8px gutter) until toggled off */
+.workspace-host { position: relative; }
+.lyrics-page { position: absolute; inset: 0 8px; z-index: 10; border-radius: var(--radius); overflow: hidden; }
+.lyrics-page .lyrics { padding: 48px clamp(24px, 6vw, 96px) 50vh; text-align: center; }
+.lyrics-page .line { font-size: clamp(28px, 3.4vw, 44px); margin: 0 auto 18px; }
+.lyrics-page .empty { color: var(--text); font-size: 18px; }
+
+/* Browse */
+.browse { position: relative; margin: -16px; padding: 0 24px 24px; min-height: calc(100% + 32px); }
+/* Album and artist pages: the hue from the artwork washes down from the top */
+.browse.tinted {
+  background: linear-gradient(to bottom, hsl(var(--hue) 45% 30%) 0, color-mix(in srgb, hsl(var(--hue) 45% 30%) 25%, var(--surface)) 340px, var(--surface) 520px);
+}
+.browse-bar {
+  /* -16px cancels .module-body's top padding so the bar pins flush to the panel edge */
+  position: sticky; top: -16px; z-index: 1; display: flex; align-items: center; gap: 8px;
+  margin: 0 -24px 8px; padding: 16px 24px 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px);
+}
+/* Same colour as the top of the wash, so the bar is seamless at rest and solid once scrolled */
+.browse.tinted .browse-bar { background: hsl(var(--hue) 45% 30%); backdrop-filter: none; }
+.round-button {
+  display: grid; place-items: center; width: 48px; height: 48px; flex: none;
+  background: var(--raised); color: var(--muted);
+}
+.round-button:hover, .round-button.on { color: var(--text); transform: scale(1.04); }
+.search {
+  display: flex; align-items: center; gap: 10px; flex: 1; max-width: 480px; height: 48px; padding: 0 16px;
+  border-radius: 999px; background: var(--raised); color: var(--muted); cursor: text;
+  box-shadow: inset 0 0 0 1px transparent; transition: box-shadow 0.15s;
+}
+.search:hover { background: var(--raised-hover); box-shadow: inset 0 0 0 1px var(--hover); }
+.search:focus-within { box-shadow: inset 0 0 0 2px var(--text); }
+.search input { flex: 1; min-width: 0; border: none; outline: none; background: none; font-size: 15px; color: var(--text); }
+.search input::placeholder { color: var(--muted); }
+
+.shelf { margin-top: 24px; }
+.shelf-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; padding: 0 12px; }
+.shelf-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.shelf > .shelf-title { padding: 0 8px; margin-bottom: 12px; }
+.shelf-head .link { font-weight: 700; }
+
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); margin: 0 -4px; }
+/* One shelf row: any cards that don't fit the first row get zero height */
+.album-grid.one-row { grid-template-rows: auto; grid-auto-rows: 0; overflow: hidden; }
+.album-card {
+  display: flex; flex-direction: column; gap: 2px; padding: 12px; border: none; border-radius: var(--radius);
+  background: none; text-align: left; cursor: pointer; min-width: 0;
+}
+.album-card:hover { background: var(--hover); }
+.album-card > * { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.album-card .row-title { font-size: 15px; }
+.album-art { width: 100%; margin-bottom: 8px; font-size: 56px; }
+.artist-card { align-items: stretch; }
+
+.hero { display: flex; align-items: flex-end; gap: 24px; padding: 24px 0 24px; }
+.hero-art { width: clamp(128px, 22vw, 220px); font-size: 96px; box-shadow: 0 8px 40px rgb(0 0 0 / 0.5); }
+.hero-text { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.view-title {
+  font-size: clamp(32px, 6vw, 88px); font-weight: 900; letter-spacing: -0.04em; line-height: 0.95;
+  /* Wrap long names onto a second line before truncating */
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; padding-bottom: 6px;
+}
+.hero-meta { display: flex; gap: 6px; align-items: baseline; }
+.hero-meta > * + *::before { content: "•"; margin-right: 6px; color: var(--muted); }
+.actions { display: flex; align-items: center; gap: 16px; padding: 8px 0 24px; }
+.play-button {
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--accent); color: #000; box-shadow: 0 8px 16px rgb(0 0 0 / 0.3);
+}
+.play-button:hover { transform: scale(1.04); filter: brightness(1.08); }
+
+.track-head {
+  display: flex; align-items: center; gap: 12px; padding: 0 8px 8px; margin-bottom: 8px;
+  border-bottom: 1px solid var(--hover);
+}
+.track-head .row-main { flex-direction: row; }
+.tracks .row { padding: 8px; }
+.track-no { display: grid; justify-items: end; width: 24px; flex: none; font-variant-numeric: tabular-nums; }
+/* Spotify swaps the number for a play button on hover; both share one grid cell so nothing shifts */
+.track-no > * { grid-area: 1 / 1; }
+.row-play { display: none; place-items: center; padding: 0; border: none; background: none; color: var(--text); cursor: pointer; }
+.row:hover .row-play, .row-play:focus-visible { display: grid; }
+.row:hover .track-num, .row:has(.row-play:focus-visible) .track-num { visibility: hidden; }
+.row.active .track-num { color: var(--accent); }
+.track-album { width: 30%; overflow: hidden; text-overflow: ellipsis; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  .text-button:hover, .play-pause:hover, .play-button:hover, .round-button:hover { transform: none; }
+}
